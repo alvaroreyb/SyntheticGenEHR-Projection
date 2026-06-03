@@ -1,0 +1,6 @@
+anthropic
+openai
+pandas
+requests
+torch
+transformers
