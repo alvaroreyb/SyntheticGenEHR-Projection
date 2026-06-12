@@ -1,0 +1,76 @@
+''' E2E
+Actúa como un médico especialista en Urología u Oncología que redacta notas evolutivas en una historia clínica electrónica hospitalaria en español.
+
+Se te proporcionará un caso clínico completamente anotado mediante etiquetas XML que identifican entidades clínicas (por ejemplo: `<ENFERMEDAD>`, `<Date>`, `<GLEASON>`, etc.). A partir de este caso clínico, genera un texto equivalente con el estilo y estructura propios de la narrativa de historia clínica de un paciente de cáncer de próstata, tal y como podría aparecer en un sistema de historia clínica real de un centro sanitario.
+
+Las posibles etiquetas XML que identifican entidades clínicas son las siguientes: [`<SINTOMA>`, `<PROCEDIMIENTO>`, `<ENFERMEDAD>`, `<Age>`, `<Date>`, `<Dose>`, `<Duration>`, `<Frequency>`, `<Neg_cue>`, `<Negated>`, `<Spec_cue>`, `<Speculated>`, `<Time>`, `<PROTEINAS>`, `<UNCLEAR>`, `<SPECIES>`, `<HUMAN>`, `<NORMALIZABLES>` `<GLEASON>`, `<PSA>`].
+
+El texto generado debe:
+
+1. Mantener estrictamente la información y los datos clínicamente relevantes desde el punto de vista del manejo médico urológico.
+2.Prescindir única y exclusivamente de datos que no tengan relevancia ni significación clínica desde el punto de vista del manejo (diagnóstico, tratamiento, plan de actuación, estadificación, etc.) de la patología de cáncer de próstata.
+3. No añadir datos nuevos que no estén explícitamente presentes.
+4. No omitir información clínicamente relevante para la patología de cáncer de próstata.
+5. No inferir resultados analíticos, radiológicos, de estadiaje, de PSA, de Gleason, ni datos anatomopatológicos si no aparecen en el caso clínico original.
+6. Reformular completamente el texto (no copiar frases literalmente) con el estilo y estructura de narrativa de historia clínica.
+7. Utilizar estilo clínico habitual en historias clínicas de pacientes reales de cáncer de próstata:
+    - Utiliza las frases más breves posibles, directas y clínicamente informativas.
+    - Minimiza y condensa al máximo el texto generado, omitiendo todo contenido prescindible, evitando redundancias y priorizando frases breves, compactas y de alta densidad informativa.
+    - Evita el lenguaje narrativo o académico del caso clínico original, propio de artículos científicos pero no de historia clínica.
+    - No incluyas comentarios explicativos, conectores entre frases ni texto de relleno prescindible.
+    - Evita el uso de verbos en las frases siempre que sea posible (p. ej., "Evolución favorable con PSA 0.04 a las 4 semanas" mejor que "Presenta evolución favorable con PSA 0.04 a las 4 semanas").
+    - Emplea las abreviaturas clínicas habituales cuando sea apropiado (p. ej., ADC, dx, tto, pte, RT, UCI, ADT, etc.).
+    - Utiliza terminología médica habitual en la práctica clínica hospitalaria española.
+8. Adapta, en la medida de lo posible, la prosa narrativa extensa del caso clínico original en un formato parecido a este estilo (sin que las secciones se muestre de forma explícita):
+    - Información paciente.
+    - Diagnóstico inicial + fecha + tratamiento inicial.
+    - Progresión + momento temporal + manejo.
+    - Complicación/evoluciones + hallazgos + actuación.
+    - Situación final + evolución clínica.
+9. Mantener coherencia temporal, tal y como está reflejada en el caso clínico original (fechas, intervalos temporales, etc.).
+10. Conservar las dosis (sin necesidad específica de mantener las unidades), frecuencias, procedimientos y diagnósticos del caso clínico original.
+11. Contener las entidades etiquetadas de la misma manera que se te han proporcionado, es decir siguiendo una estructura de etiquetas similar a XML
+
+No expliques lo que haces. Devuelve únicamente la nota clínica generada.
+
+*Few-shot includes 2 examples here
+
+CASO CLÍNICO ORIGINAL:
+
+{INSERTAR_AQUÍ_EL_TEXTO_DEL_CASO}
+'''
+
+
+''' T2E
+Se te proporcionará un caso clínico relativo a un caso de cáncer de próstata. A partir de este caso clínico, genera un texto equivalente con el estilo y estructura propios de la narrativa de historia clínica de un paciente de cáncer de próstata, tal y como podría aparecer en un sistema de historia clínica real de un centro sanitario.
+A partir este caso debes generar e identificar las entidades clínicas relevantes para el manejo de la patología de cáncer de próstata, siguiendo el formato de etiquetas similar a XML que se muestra a continuación. El manejo debe realizarse tal que <Entidad>ejemplo1</Entidad>.
+Las posibles etiquetas XML que identifican entidades clínicas son las siguientes: [`<SINTOMA>`, `<PROCEDIMIENTO>`, `<ENFERMEDAD>`, `<Age> (incluyendo la palabra años si aparece)`, `<Date>`, `<Dose>`, `<Duration>`, `<Frequency>`, `<Neg_cue> (negaciones como no, sin, ni)`, `<Negated>(parte del texto que está negado)`, `<Spec_cue>(palabras que indican especulación, como podría, probablemente, incierto)`, `<Speculated>(parte del texto que está especulado)`, `<Time>`, `<PROTEINAS>`, `<UNCLEAR>`, `<SPECIES>`, `<HUMAN>`, `<NORMALIZABLES> (Palabras relativas a medicamentos, químicos y demás)` `<GLEASON>(inlcuye suma y total)`, `<PSA>`].
+
+El texto generado debe:
+
+1. Mantener estrictamente la información y los datos clínicamente relevantes desde el punto de vista del manejo médico urológico.
+2. Prescindir única y exclusivamente de datos que no tengan relevancia ni significación clínica desde el punto de vista del manejo (diagnóstico, tratamiento, plan de actuación, estadificación, etc.) de la patología de cáncer de próstata.
+3. No añadir datos nuevos que no estén explícitamente presentes.
+4. No omitir información clínicamente relevante para la patología de cáncer de próstata.
+5. No inferir resultados analíticos, radiológicos, de estadiaje, de PSA, de Gleason, ni datos anatomopatológicos si no aparecen en el caso clínico original.
+6. Reformular completamente el texto (no copiar frases literalmente) con el estilo y estructura de narrativa de historia clínica.
+7. Utilizar estilo clínico habitual en historias clínicas de pacientes reales de cáncer de próstata:
+    - Utiliza las frases más breves posibles, directas y clínicamente informativas.
+    - Minimiza y condensa al máximo el texto generado, omitiendo todo contenido prescindible, evitando redundancias y priorizando frases breves, compactas y de alta densidad informativa.
+    - Evita el lenguaje narrativo o académico del caso clínico original, propio de artículos científicos pero no de historia clínica.
+    - No incluyas comentarios explicativos, conectores entre frases ni texto de relleno prescindible.
+    - Evita el uso de verbos en las frases siempre que sea posible (p. ej., "Evolución favorable con PSA 0.04 a las 4 semanas" mejor que "Presenta evolución favorable con PSA 0.04 a las 4 semanas").
+    - Emplea las abreviaturas clínicas habituales cuando sea apropiado (p. ej., ADC, dx, tto, pte, RT, UCI, ADT, etc.).
+    - Utiliza terminología médica habitual en la práctica clínica hospitalaria española.
+8. Adapta, en la medida de lo posible, la prosa narrativa extensa del caso clínico original en un formato parecido a este estilo (sin que las secciones se muestren de forma explícita):
+    - Información paciente.
+    - Diagnóstico inicial + fecha + tratamiento inicial.
+    - Progresión + momento temporal + manejo.
+    - Complicación/evoluciones + hallazgos + actuación.
+    - Situación final + evolución clínica.
+9. Mantener coherencia temporal, tal y como está reflejada en el caso clínico original (fechas, intervalos temporales, etc.).
+10. Conservar las dosis (sin necesidad específica de mantener las unidades, a pesar de que estén dentro de una etiqueta), frecuencias, procedimientos y diagnósticos del caso clínico original.
+11. Etiquetar todo aquello que sea clínicamente relevante para el manejo de la patología de cáncer de próstata con las etiquetas XML correspondientes, siguiendo el formato de ejemplo mencionado anteriormente. Etiqueta toda la información clínicamente relevante para el manejo que aparezca en el caso clínico original, sin omitir nada que sea relevante ni añadir etiquetas a información que no lo sea. No añadas información que no sea clínicamente relevante para el manejo de la patología de cáncer de próstata.
+12. Se pueden superponer etiquetas de la siguiente manera: <SINTOMA>ejemplo <Dose>ejemplo2</Dose> ejemplo</SINTOMA>.
+
+'''
